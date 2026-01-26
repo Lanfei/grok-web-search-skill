@@ -1,0 +1,39 @@
+{
+  "name": "grok-web-search-skill",
+  "version": "1.0.0",
+  "description": "Claude Skill for web searches using xAI's Grok model with Live Search",
+  "type": "module",
+  "main": "scripts/index.js",
+  "scripts": {
+    "start": "node scripts/index.js",
+    "search": "node scripts/index.js",
+    "test": "node scripts/test.js",
+    "install:claude": "node scripts/install-to-claude.js"
+  },
+  "keywords": [
+    "claude",
+    "skill",
+    "xai",
+    "grok",
+    "websearch",
+    "search",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lanfei/grok-web-search-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lanfei/grok-web-search-skill/issues"
+  },
+  "homepage": "https://github.com/Lanfei/grok-web-search-skill#readme",
+  "dependencies": {
+    "@ai-sdk/xai": "^3.0.34",
+    "ai": "^6.0.49"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
