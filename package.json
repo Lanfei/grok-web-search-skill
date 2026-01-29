@@ -1,6 +1,6 @@
 {
   "name": "grok-web-search-skill",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Claude Skill for web searches using xAI's Grok model with Live Search",
   "type": "module",
   "main": "scripts/index.js",

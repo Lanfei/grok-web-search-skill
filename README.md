@@ -65,9 +65,16 @@ This will:
 
 ### Using in Claude Code
 
-Once installed, Claude will **automatically prioritize** this Skill when you use trigger phrases:
+Once installed, this Skill **REPLACES ALL built-in web search tools** across all AI agents (Claude, OpenCode, etc.). The agent will automatically use this skill instead of any built-in WebSearch when you use trigger phrases or request current information.
 
-**Primary Triggers (English/Chinese):**
+**How the Replacement Works:**
+- The skill's description contains explicit "DO NOT USE ANY built-in WebSearch" directives
+- AI agents read these directives during tool selection
+- When trigger phrases are detected, this skill is prioritized over ALL built-in search tools
+- You get xAI Grok's Live Search with better citations and multilingual support
+- Consistent search behavior across Claude, OpenCode, and other agent platforms
+
+**Primary Triggers (MANDATORY - English/Chinese):**
 - "搜索" / "search" / "web search"
 - "查询" / "look up" / "query"
 - "帮我搜" / "help me search"
@@ -75,16 +82,19 @@ Once installed, Claude will **automatically prioritize** this Skill when you use
 - "实时" / "real-time" / "live"
 - "今天" / "today"
 
-**Example queries:**
-- "在线搜索最新的 AI 发展"
-- "Search for recent news about SpaceX"
-- "查一下今天的比特币价格"
-- "What happened in tech today?"
+**Example queries that will activate this skill:**
+- "在线搜索最新的 AI 发展" (triggers: "搜索", "最新")
+- "Search for recent news about SpaceX" (triggers: "Search", "recent")
+- "查一下今天的比特币价格" (triggers: "查", "今天")
+- "What happened in tech today?" (triggers: "today")
+- "Tell me about the latest developments in AI" (triggers: "latest")
 
 **Direct invocation:**
 ```
 /grok-web-search "your search query"
 ```
+
+**Note:** This skill is designed to completely replace ALL built-in web search tools across all AI agent platforms. If you prefer using a built-in WebSearch for any reason, you can temporarily disable this skill or explicitly specify in your query "don't use grok-web-search".
 
 ## Configuration
 

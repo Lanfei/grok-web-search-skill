@@ -21,11 +21,18 @@ const SKILL_INSTALL_DIR = path.join(SKILLS_DIR, SKILL_NAME);
 
 // Files and directories to exclude
 const EXCLUDE_PATTERNS = [
+  // Development environment
   'node_modules',
   '.git',
   '.idea',
   '.DS_Store',
-  '*.zip',
+  '.claude',
+  // Configuration files
+  '.gitignore',
+  'package-lock.json',
+  // Documentation (project-specific, not needed in installed skill)
+  'CLAUDE.md',
+  // Test and installation scripts
   'scripts/test.js',
   'scripts/install-to-claude.js',
 ];
