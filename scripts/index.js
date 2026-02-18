@@ -5,8 +5,15 @@
  * Uses xAI's Grok model with web search capabilities
  */
 
+import path from 'path';
+import dotenv from 'dotenv';
 import { xai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 async function performWebSearch(query) {
   // Validate API key
@@ -16,7 +23,7 @@ async function performWebSearch(query) {
   }
 
   // Get model from environment variable, default to grok-4-1-fast
-  const modelName = process.env.XAI_MODEL || 'grok-4-1-fast';
+  const modelName = process.env.XAI_MODEL || 'grok-4-1-fast-reasoning';
 
   console.log(`🔍 Searching with ${modelName}: ${query}\n`);
 

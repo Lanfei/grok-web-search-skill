@@ -32,6 +32,7 @@ const EXCLUDE_PATTERNS = [
   'package-lock.json',
   // Documentation (project-specific, not needed in installed skill)
   'CLAUDE.md',
+  'README.md',
   // Test and installation scripts
   'scripts/test.js',
   'scripts/install-to-claude.js',
@@ -106,31 +107,23 @@ async function copyDir(src, dest, baseDir = src) {
  */
 async function install() {
   try {
-    // Step 1: Install dependencies in source
-    console.log('📦 Step 1/4: Installing dependencies in source...');
-    execSync('npm install --silent', {
-      cwd: PROJECT_DIR,
-      stdio: 'inherit'
-    });
-    console.log('✅ Dependencies installed\n');
-
-    // Step 2: Create Skills directory
-    console.log('📁 Step 2/4: Preparing installation directory...');
+    // Step 1: Create Skills directory
+    console.log('📁 Step 1/3: Preparing installation directory...');
     await fs.mkdir(SKILLS_DIR, { recursive: true });
     console.log(`✅ Skills directory ready: ${SKILLS_DIR}\n`);
 
-    // Step 3: Remove old version if exists
+    // Step 2: Remove old version if exists
     try {
       await fs.access(SKILL_INSTALL_DIR);
-      console.log('🗑️  Step 3/4: Removing old version...');
+      console.log('🗑️  Step 2/3: Removing old version...');
       await fs.rm(SKILL_INSTALL_DIR, { recursive: true, force: true });
       console.log('✅ Old version removed\n');
     } catch (error) {
-      console.log('⏭️  Step 3/4: No old version found, skipping...\n');
+      console.log('⏭️  Step 2/3: No old version found, skipping...\n');
     }
 
-    // Step 4: Copy files
-    console.log('📦 Step 4/4: Copying Skill files...');
+    // Step 3: Copy files
+    console.log('📦 Step 3/3: Copying Skill files...');
     await copyDir(PROJECT_DIR, SKILL_INSTALL_DIR, PROJECT_DIR);
     console.log('✅ Files copied\n');
 
@@ -165,7 +158,7 @@ async function install() {
     console.log('4. Use in conversations:');
     console.log('   \'Search for the latest AI news\'');
     console.log('   \'/grok-web-search "your query"\'\n');
-    console.log('📖 For more information, see README.md');
+    console.log('📖 For more information, see https://github.com/Lanfei/grok-web-search-skill');
 
   } catch (error) {
     console.error('\n❌ Installation failed:', error.message);
