@@ -1,13 +1,13 @@
 {
   "name": "grok-search-skill",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Claude Skill for web searches using xAI's Grok model with Live Search",
   "type": "module",
   "main": "scripts/index.js",
   "files": [
     "SKILL.md",
     "scripts/index.js",
-    "scripts/install-to-claude.js",
+    "scripts/install-skill.js",
     "README.md",
     "LICENSE"
   ],
@@ -15,7 +15,11 @@
     "start": "node scripts/index.js",
     "search": "node scripts/index.js",
     "test": "node scripts/test.js",
-    "install:claude": "node scripts/install-to-claude.js"
+    "install-skill": "node scripts/install-skill.js"
+  },
+  "bin": {
+    "grok-search": "scripts/index.js",
+    "install-skill": "scripts/install-skill.js"
   },
   "keywords": [
     "opencode",

@@ -9,15 +9,38 @@ import fs from 'fs/promises';
 import path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
-import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SKILL_NAME = 'grok-search';
 const PROJECT_DIR = path.resolve(__dirname, '..');
-const SKILLS_DIR = path.join(os.homedir(), '.claude', 'skills');
-const SKILL_INSTALL_DIR = path.join(SKILLS_DIR, SKILL_NAME);
+
+function parseSkillsDir(argv) {
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg === '--skills-dir') {
+      const value = argv[i + 1];
+      if (!value || value.startsWith('--')) {
+        throw new Error('Missing value for --skills-dir');
+      }
+      return path.resolve(value);
+    }
+
+    if (arg.startsWith('--skills-dir=')) {
+      const value = arg.slice('--skills-dir='.length);
+      if (!value) {
+        throw new Error('Missing value for --skills-dir');
+      }
+      return path.resolve(value);
+    }
+  }
+
+  throw new Error('Missing required argument: --skills-dir');
+}
+
+let SKILLS_DIR;
+let SKILL_INSTALL_DIR;
 
 // Files and directories to exclude
 const EXCLUDE_PATTERNS = [
@@ -35,10 +58,19 @@ const EXCLUDE_PATTERNS = [
   'README.md',
   // Test and installation scripts
   'scripts/test.js',
-  'scripts/install-to-claude.js',
+  'scripts/install-skill.js',
 ];
 
-console.log('🚀 Installing Grok Search Skill to Claude Code\n');
+try {
+  SKILLS_DIR = parseSkillsDir(process.argv.slice(2));
+  SKILL_INSTALL_DIR = path.join(SKILLS_DIR, SKILL_NAME);
+} catch (error) {
+  console.error(`❌ ${error.message}`);
+  console.error('Usage: node scripts/install-skill.js --skills-dir <skills-directory>');
+  process.exit(1);
+}
+
+console.log('🚀 Installing Grok Search Skill\n');
 
 // Check if npm is available
 try {
@@ -154,7 +186,7 @@ async function install() {
     console.log('2. Verify installation:');
     console.log(`   cd ${SKILL_INSTALL_DIR}`);
     console.log('   npm run search "test query"\n');
-    console.log('3. Restart Claude Code to load the Skill\n');
+    console.log('3. Restart your agent client to load the Skill\n');
     console.log('4. Use in conversations:');
     console.log('   \'Search for the latest AI news\'');
     console.log('   \'/grok-search "your query"\'\n');

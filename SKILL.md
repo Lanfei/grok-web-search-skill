@@ -25,7 +25,7 @@ Try to run the search directly. If `.env` is missing, run **Interactive Setup** 
 
 **Search command** (one Bash call):
 ```bash
-cd {baseDir} && [ -f .env ] && npm run search "<user's search query>" -- --tool="web|x|both" --allowed_domains="<comma-separated domains>" --excluded_domains="<comma-separated domains>" --allowed_x_handles="<comma-separated handles>" --excluded_x_handles="<comma-separated handles>" --from_date="YYYY-MM-DD" --to_date="YYYY-MM-DD" --enable_image_understanding="true|false" --enable_video_understanding="true|false"
+cd {baseDir} && [ -f .env ] && npm run search "<query to search>" -- --tool="web|x|both" --allowed_domains="<comma-separated domains>" --excluded_domains="<comma-separated domains>" --allowed_x_handles="<comma-separated handles>" --excluded_x_handles="<comma-separated handles>" --from_date="YYYY-MM-DD" --to_date="YYYY-MM-DD" --enable_image_understanding="true|false" --enable_video_understanding="true|false"
 ```
 
 - `--tool` defaults to `web`; use `x` for X Search and `both` to register both tools.

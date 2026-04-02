@@ -23,14 +23,14 @@ npm test "your query"
 # Run full test suite (6 predefined tests)
 npm test
 
-# Install to Claude Code
-npm run install:claude
+# Install Skill
+npm run install-skill -- --skills-dir <skills-directory>
 ```
 
 ### Script Files
 - `scripts/index.js` - Main search implementation
 - `scripts/test.js` - Test suite with both single query and full test modes
-- `scripts/install-to-claude.js` - Cross-platform installer for Claude Code
+- `scripts/install-skill.js` - Cross-platform installer for Claude Code
 
 ## Architecture
 
@@ -49,7 +49,7 @@ The skill uses the Vercel AI SDK with xAI provider to perform web searches:
    - Claude Code automatically prioritizes this skill when these keywords are detected
    - Can be invoked directly with `/grok-search "query"`
 
-3. **Installation** (`scripts/install-to-claude.js`):
+3. **Installation** (`scripts/install-skill.js`):
    - Copies skill to `~/.claude/skills/grok-search`
    - Excludes: node_modules (reinstalls fresh), test scripts, git files
    - Runs `npm install --production` in target directory

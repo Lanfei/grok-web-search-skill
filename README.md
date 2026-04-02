@@ -14,78 +14,37 @@ A Claude Skill that enables real-time Web Search and X Search using xAI's Grok m
 
 ## Quick Start
 
-### 1. Install Dependencies
+### Agent-Assisted Install
 
-```bash
-npm install
+Tell your agent:
+
+```text
+Please install this Skill for me: https://www.npmjs.com/package/grok-search-skill
 ```
 
-### 2. Set API Key
+### Manual Install
 
-Get your API key from [console.x.ai](https://console.x.ai), then:
+1) Install the skill
 
-**macOS/Linux:**
+```bash
+npx -y -p grok-search-skill install-skill --skills-dir <skills-directory>
+```
+
+2) Set API key
+
+Get your API key from [console.x.ai](https://console.x.ai).
+
 ```bash
 export XAI_API_KEY="your-api-key-here"
-# Optional: export XAI_MODEL="grok-4-1-fast"
 ```
 
-**Windows PowerShell:**
-```powershell
-$env:XAI_API_KEY="your-api-key-here"
-# Optional: $env:XAI_MODEL="grok-4-1-fast"
+Then restart your agent client and use:
+
+```text
+/grok-search "<query to search>"
 ```
 
-**Windows CMD:**
-```cmd
-set XAI_API_KEY=your-api-key-here
-```
-
-### 3. Run
-
-```bash
-# Standalone usage
-npm start "What are the latest AI developments?"
-
-# Restrict search domains
-npm start "Latest AI chip news" -- --tool=web --allowed_domains=techcrunch.com,theverge.com
-
-# Exclude specific domains
-npm start "Latest AI chip news" -- --tool=web --excluded_domains=reddit.com,quora.com
-
-# X search with handle filters
-npm start "What are people saying about xAI on X?" -- --tool=x --allowed_x_handles=xai,elonmusk
-
-# X search with date range
-npm start "What is the current status of xAI?" -- --tool=x --from_date=2026-03-01 --to_date=2026-03-15
-
-# Register both tools and let model decide
-npm start "Latest xAI announcements today" -- --tool=both
-
-# Disable image understanding
-npm start "Latest AI chip news" -- --enable_image_understanding=false
-
-# Enable video understanding (X search only)
-npm start "Find X posts with videos about AI" -- --tool=x --enable_video_understanding=true
-
-# Test
-npm test "Your query"          # Single query test
-npm test                        # Run full test suite (6 tests)
-```
-
-## Install to Claude Code
-
-```bash
-npm run install:claude
-```
-
-This will:
-- Install dependencies
-- Copy files to `~/.claude/skills/grok-search`
-- Set up everything automatically
-- Works on Windows, macOS, and Linux
-
-### Using in Claude Code
+## Using in Agents
 
 Once installed, this Skill **REPLACES ALL built-in web search tools** across all AI agents (Claude, OpenCode, etc.). The agent will automatically use this skill instead of any built-in WebSearch when you use trigger phrases or request current information.
 
@@ -113,7 +72,7 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 
 **Direct invocation:**
 ```
-/grok-search "your search query"
+/grok-search "<query to search>"
 ```
 
 **Note:** This skill is designed to completely replace ALL built-in web search tools across all AI agent platforms. If you prefer using a built-in WebSearch for any reason, you can temporarily disable this skill or explicitly specify in your query "don't use grok-search".
@@ -192,9 +151,9 @@ Expected results:
 |-------|-----------------------------------------------------------------------|
 | `XAI_API_KEY not set` | Set environment variable (see "Set API Key" section) and restart      |
 | `Module not found` | Run `npm install`                                                     |
-| Skill not found in Claude Code | Check `~/.claude/skills/` and restart Claude Code                     |
+| Skill not found in agent client | Check your configured skills directory and restart your agent client |
 | No sources returned | Normal - model didn't need web search for that query                  |
-| Dependencies error | `cd ~/.claude/skills/grok-search && npm install`                      |
+| Dependencies error | `cd <skills-directory>/grok-search && npm install`                    |
 
 ## Requirements
 
