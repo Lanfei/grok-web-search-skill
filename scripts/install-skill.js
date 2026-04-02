@@ -55,6 +55,7 @@ const EXCLUDE_PATTERNS = [
   '.idea',
   '.DS_Store',
   '.claude',
+  '.env',
   // Configuration files
   '.gitignore',
   'package-lock.json',
@@ -145,6 +146,22 @@ async function copyDir(src, dest, baseDir = src) {
 }
 
 /**
+ * Remove all files in install dir except root .env
+ */
+async function cleanInstallDirPreserveEnv(installDir) {
+  const entries = await fs.readdir(installDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (entry.name === '.env') {
+      continue;
+    }
+
+    const entryPath = path.join(installDir, entry.name);
+    await fs.rm(entryPath, { recursive: true, force: true });
+  }
+}
+
+/**
  * Main installation process
  */
 async function install() {
@@ -154,12 +171,12 @@ async function install() {
     await fs.mkdir(SKILLS_DIR, { recursive: true });
     console.log(`✅ Skills directory ready: ${SKILLS_DIR}\n`);
 
-    // Step 2: Remove old version if exists
+    // Step 2: Clean old version (preserve .env)
     try {
       await fs.access(SKILL_INSTALL_DIR);
-      console.log('🗑️  Step 2/3: Removing old version...');
-      await fs.rm(SKILL_INSTALL_DIR, { recursive: true, force: true });
-      console.log('✅ Old version removed\n');
+      console.log('🧹 Step 2/3: Cleaning old version (preserving .env)...');
+      await cleanInstallDirPreserveEnv(SKILL_INSTALL_DIR);
+      console.log('✅ Old version cleaned\n');
     } catch (error) {
       console.log('⏭️  Step 2/3: No old version found, skipping...\n');
     }
