@@ -158,7 +158,7 @@ async function install() {
     console.log('4. Use in conversations:');
     console.log('   \'Search for the latest AI news\'');
     console.log('   \'/grok-search "your query"\'\n');
-    console.log('📖 For more information, see https://github.com/Lanfei/grok-web-search-skill');
+    console.log('📖 For more information, see https://github.com/Lanfei/grok-search-skill');
 
   } catch (error) {
     console.error('\n❌ Installation failed:', error.message);
