@@ -1,6 +1,6 @@
 # Grok Search Skill
 
-A Claude Skill that enables real-time Web Search and X Search using xAI's Grok model with automatic citation and source extraction.
+An AI agent skill that enables real-time Web Search and X Search using xAI's Grok model with automatic citation and source extraction.
 
 ## Features
 
