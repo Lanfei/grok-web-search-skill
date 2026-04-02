@@ -19,7 +19,9 @@ A Claude Skill that enables real-time Web Search and X Search using xAI's Grok m
 Tell your agent:
 
 ```text
-Please install this Skill for me: https://www.npmjs.com/package/grok-search-skill
+Please install and configure this Skill interactively for me:
+
+npx -y -p grok-search-skill install-skill --skills-dir <skills-directory>
 ```
 
 ### Manual Install
