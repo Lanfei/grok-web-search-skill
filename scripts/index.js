@@ -285,7 +285,7 @@ async function performSearch(query, options = {}) {
     throw new Error('XAI_API_KEY environment variable is not set');
   }
 
-  // Get model from environment variable, default to grok-4-1-fast
+  // Get model from environment variable, default to grok-4-1-fast-reasoning
   const modelName = process.env.XAI_MODEL || 'grok-4-1-fast-reasoning';
 
   const {

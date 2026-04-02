@@ -14,7 +14,7 @@
 import { xai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
 
-const modelName = process.env.XAI_MODEL || 'grok-4-1-fast';
+const modelName = process.env.XAI_MODEL || 'grok-4-1-fast-reasoning';
 
 function parseTestCliArgs(argv) {
   const args = [...argv];

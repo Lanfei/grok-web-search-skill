@@ -1,6 +1,6 @@
 # Grok Search Skill
 
-An AI agent skill that enables real-time Web Search and X Search using xAI's Grok model with automatic citation and source extraction.
+An AI agent skill for real-time web and X search with xAI Grok.
 
 ## Features
 
@@ -83,10 +83,10 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 
 ### Environment Variables
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `XAI_API_KEY` | ✅ Yes | - | Your xAI API key |
-| `XAI_MODEL` | ❌ No | `grok-4-1-fast` | Model to use |
+| Variable      | Required | Default                   | Description      |
+| ------------- | -------- | ------------------------- | ---------------- |
+| `XAI_API_KEY` | ✅ Yes   | -                         | Your xAI API key |
+| `XAI_MODEL`   | ❌ No    | `grok-4-1-fast-reasoning` | Model to use     |
 
 ### CLI Parameters
 
@@ -116,60 +116,37 @@ Rules:
 ## Output Example
 
 ```
-🔍 Searching with grok-4-1-fast: What are the latest AI developments?
+🔍 Searching with grok-4-1-fast-reasoning (web): What are the latest AI developments?
 
-📝 Answer:
-
-[Comprehensive answer synthesized from multiple web sources...]
+OpenAI announced new model updates this week, while xAI expanded Grok capabilities...
 ```
 
 ## Testing
 
-### Single Query Test
-```bash
-npm test "What's the latest tech news?"
-```
-
-### Full Test Suite
 ```bash
 npm test
 ```
 
-Runs 6 tests covering:
-- English/Chinese queries
-- Tech topics
-- Company-specific searches
-- X Search mode
-- Combined web + X mode
-
-Expected results:
-- ✅ 100% pass rate
-- ~25s average response time
-- ~16 sources per query
-
 ## Troubleshooting
 
-| Issue | Solution                                                              |
-|-------|-----------------------------------------------------------------------|
-| `XAI_API_KEY not set` | Set environment variable (see "Set API Key" section) and restart      |
-| `Module not found` | Run `npm install`                                                     |
-| Skill not found in agent client | Check your configured skills directory and restart your agent client |
-| No sources returned | Normal - model didn't need web search for that query                  |
-| Dependencies error | `cd <skills-directory>/grok-search && npm install`                    |
+| Issue                           | Solution                                                               |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| `XAI_API_KEY` not set           | Set environment variable (see "Set API Key" section) and restart      |
+| `Module not found`              | Run `npm install`                                                      |
+| Skill not found in agent client | Check your configured skills directory and restart your agent client   |
+| Dependencies error              | `cd <skills-directory>/grok-search && npm install`                     |
 
 ## Requirements
 
 - Node.js 18+
 - xAI API key ([Get one here](https://console.x.ai))
 - Internet connection
-- Dependencies: `@ai-sdk/xai@^3.0.34`, `ai@^6.0.49`
 
 ## Links
 
 - [Claude Skills Documentation](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills)
 - [xAI API Documentation](https://ai-sdk.dev/providers/ai-sdk-providers/xai)
 - [xAI Console](https://console.x.ai)
-- [Testing Guide](TESTING.md)
 
 ## License
 
