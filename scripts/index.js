@@ -28,8 +28,8 @@ function parseDomainList(value) {
 
 function parseCliArgs(argv) {
   const args = [...argv];
-  let allowedDomainsRaw = process.env.XAI_ALLOWED_DOMAINS || '';
-  let excludedDomainsRaw = process.env.XAI_EXCLUDED_DOMAINS || '';
+  let allowedDomainsRaw = '';
+  let excludedDomainsRaw = '';
   const queryParts = [];
 
   for (let i = 0; i < args.length; i++) {

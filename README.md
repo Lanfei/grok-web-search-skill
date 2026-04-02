@@ -110,8 +110,6 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 |----------|----------|---------|-------------|
 | `XAI_API_KEY` | ✅ Yes | - | Your xAI API key |
 | `XAI_MODEL` | ❌ No | `grok-4-1-fast` | Model to use |
-| `XAI_ALLOWED_DOMAINS` | ❌ No | - | Comma-separated allowlist domains |
-| `XAI_EXCLUDED_DOMAINS` | ❌ No | - | Comma-separated blocklist domains |
 
 ### Domain Filter Parameters
 

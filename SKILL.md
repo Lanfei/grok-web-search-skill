@@ -67,5 +67,3 @@ printf 'XAI_MODEL=<chosen model>\n' > {baseDir}/.env \
 - **XAI_API_KEY** (required): Your xAI API key from console.x.ai
 - **XAI_MODEL** (optional): Model to use
   - Default: `grok-4-1-fast-reasoning`
-- **XAI_ALLOWED_DOMAINS** (optional): Comma-separated allowlist domains for web search
-- **XAI_EXCLUDED_DOMAINS** (optional): Comma-separated blocklist domains for web search
