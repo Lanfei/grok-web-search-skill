@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Installation script for Claude Code
+ * Installation script for agent skills
  * Cross-platform installer using Node.js
  */
 
@@ -15,6 +15,11 @@ const __dirname = path.dirname(__filename);
 
 const SKILL_NAME = 'grok-search';
 const PROJECT_DIR = path.resolve(__dirname, '..');
+
+function isPathInside(parentPath, targetPath) {
+  const relative = path.relative(parentPath, targetPath);
+  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+}
 
 function parseSkillsDir(argv) {
   for (let i = 0; i < argv.length; i += 1) {
@@ -54,7 +59,6 @@ const EXCLUDE_PATTERNS = [
   '.gitignore',
   'package-lock.json',
   // Documentation (project-specific, not needed in installed skill)
-  'CLAUDE.md',
   'README.md',
   // Test and installation scripts
   'scripts/test.js',
@@ -64,6 +68,12 @@ const EXCLUDE_PATTERNS = [
 try {
   SKILLS_DIR = parseSkillsDir(process.argv.slice(2));
   SKILL_INSTALL_DIR = path.join(SKILLS_DIR, SKILL_NAME);
+
+  if (isPathInside(PROJECT_DIR, SKILL_INSTALL_DIR)) {
+    throw new Error(
+      `Invalid --skills-dir: ${SKILLS_DIR}. Install path must not be inside the project directory.`,
+    );
+  }
 } catch (error) {
   console.error(`❌ ${error.message}`);
   console.error('Usage: node scripts/install-skill.js --skills-dir <skills-directory>');
