@@ -4,6 +4,13 @@
   "description": "Claude Skill for web searches using xAI's Grok model with Live Search",
   "type": "module",
   "main": "scripts/index.js",
+  "files": [
+    "SKILL.md",
+    "scripts/index.js",
+    "scripts/install-to-claude.js",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node scripts/index.js",
     "search": "node scripts/index.js",
