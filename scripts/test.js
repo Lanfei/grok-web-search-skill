@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Grok WebSearch Skill - Test Suite
+ * Grok Search Skill - Test Suite
  *
  * Usage:
  *   npm test                    - Run all predefined tests
  *   npm test "custom query"     - Test a single custom query
+ *   npm test -- --tool=x "query" - Test single query with tool mode
  *   node test.js                - Run all predefined tests
  *   node test.js "custom query" - Test a single custom query
  */
@@ -15,29 +16,110 @@ import { generateText } from 'ai';
 
 const modelName = process.env.XAI_MODEL || 'grok-4-1-fast';
 
-// Check if user provided a custom query
-const customQuery = process.argv.slice(2).join(' ');
+function parseTestCliArgs(argv) {
+  const args = [...argv];
+  let tool = 'web';
+  const queryParts = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+
+    if (arg.startsWith('--tool=')) {
+      tool = arg.slice('--tool='.length);
+      continue;
+    }
+
+    if (arg === '--tool' && i + 1 < args.length) {
+      tool = args[i + 1] || 'web';
+      i++;
+      continue;
+    }
+
+    queryParts.push(arg);
+  }
+
+  return {
+    tool,
+    query: queryParts.join(' ').trim(),
+  };
+}
+
+function normalizeToolMode(tool) {
+  const normalized = (tool || 'web').trim().toLowerCase();
+  if (normalized === 'web' || normalized === 'x' || normalized === 'both') {
+    return normalized;
+  }
+
+  throw new Error(`Invalid --tool value: "${tool}". Use web, x, or both.`);
+}
+
+const parsedCliArgs = parseTestCliArgs(process.argv.slice(2));
+const customTool = normalizeToolMode(parsedCliArgs.tool);
+const customQuery = parsedCliArgs.query;
+
+function buildTools({
+  tool = 'web',
+  enableImageUnderstanding = true,
+  enableVideoUnderstanding = false,
+  webOptions = {},
+  xOptions = {},
+} = {}) {
+  const tools = {};
+
+  if (tool === 'web' || tool === 'both') {
+    tools.web_search = xai.tools.webSearch({
+      ...webOptions,
+      enableImageUnderstanding,
+    });
+  }
+
+  if (tool === 'x' || tool === 'both') {
+    tools.x_search = xai.tools.xSearch({
+      ...xOptions,
+      enableImageUnderstanding,
+      enableVideoUnderstanding,
+    });
+  }
+
+  return tools;
+}
 
 // Test cases
 const testCases = [
   {
     name: '英文时事查询',
     query: 'What happened in tech news today?',
+    tool: 'web',
     expectedSources: true,
   },
   {
     name: '中文时事查询',
     query: '今天有什么重要新闻？',
+    tool: 'web',
     expectedSources: true,
   },
   {
     name: '技术话题查询',
     query: 'What are the latest developments in AI?',
+    tool: 'web',
     expectedSources: true,
   },
   {
     name: '特定公司查询',
     query: 'What is SpaceX doing recently?',
+    tool: 'web',
+    expectedSources: true,
+  },
+  {
+    name: 'X 平台舆情查询',
+    query: 'What are people saying about xAI on X?',
+    tool: 'x',
+    expectedSources: true,
+  },
+  {
+    name: '双工具自动选择',
+    query: 'Latest updates about xAI and AI industry this week',
+    tool: 'both',
     expectedSources: true,
   },
 ];
@@ -50,15 +132,25 @@ const results = {
   details: [],
 };
 
-console.log('🧪 Grok WebSearch Skill - Test Suite\n');
+console.log('🧪 Grok Search Skill - Test Suite\n');
 console.log(`Model: ${modelName}`);
 console.log(`Total Tests: ${testCases.length}\n`);
 console.log('='.repeat(60));
 
 async function runTest(testCase, index) {
-  const { name, query, expectedSources } = testCase;
+  const {
+    name,
+    query,
+    tool = 'web',
+    expectedSources,
+    enableImageUnderstanding = true,
+    enableVideoUnderstanding = false,
+    webOptions = {},
+    xOptions = {},
+  } = testCase;
 
   console.log(`\n📋 Test ${index + 1}/${testCases.length}: ${name}`);
+  console.log(`Tool: ${tool}`);
   console.log(`Query: "${query}"`);
 
   const startTime = Date.now();
@@ -67,11 +159,13 @@ async function runTest(testCase, index) {
     const { text, sources } = await generateText({
       model: xai.responses(modelName),
       prompt: query,
-      tools: {
-        web_search: xai.tools.webSearch({
-          enableImageUnderstanding: true,
-        }),
-      },
+      tools: buildTools({
+        tool,
+        enableImageUnderstanding,
+        enableVideoUnderstanding,
+        webOptions,
+        xOptions,
+      }),
     });
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
@@ -121,6 +215,7 @@ async function runTest(testCase, index) {
     results.details.push({
       name,
       query,
+      tool,
       passed,
       duration: parseFloat(duration),
       textLength: text.length,
@@ -137,6 +232,7 @@ async function runTest(testCase, index) {
     results.details.push({
       name,
       query,
+      tool,
       passed: false,
       duration: parseFloat(duration),
       error: error.message,
@@ -144,9 +240,10 @@ async function runTest(testCase, index) {
   }
 }
 
-async function runSingleQuery(query) {
+async function runSingleQuery(query, tool = 'web') {
   console.log('🚀 Single Query Test\n');
   console.log(`Model: ${modelName}`);
+  console.log(`Tool: ${tool}`);
   console.log(`Query: "${query}"\n`);
 
   const startTime = Date.now();
@@ -155,11 +252,7 @@ async function runSingleQuery(query) {
     const { text, sources } = await generateText({
       model: xai.responses(modelName),
       prompt: query,
-      tools: {
-        web_search: xai.tools.webSearch({
-          enableImageUnderstanding: true,
-        }),
-      },
+      tools: buildTools({ tool, enableImageUnderstanding: true }),
     });
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
@@ -204,7 +297,7 @@ async function runAllTests() {
 
   // If custom query provided, run single test
   if (customQuery) {
-    await runSingleQuery(customQuery);
+    await runSingleQuery(customQuery, customTool);
     return;
   }
 

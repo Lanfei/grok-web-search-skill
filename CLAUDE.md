@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Skill that enables real-time web searches using xAI's Grok model with automatic citation and source extraction. It integrates with Claude Code to provide web search capabilities triggered by specific keywords.
+This is a Claude Skill that enables real-time Web Search and X Search using xAI's Grok model with automatic citation and source extraction. It integrates with Claude Code to provide search capabilities triggered by specific keywords.
 
 ## Key Commands
 
@@ -20,7 +20,7 @@ npm run search "your search query"
 # Test with a specific query
 npm test "your query"
 
-# Run full test suite (4 predefined tests)
+# Run full test suite (6 predefined tests)
 npm test
 
 # Install to Claude Code
@@ -37,9 +37,9 @@ npm run install:claude
 ### Core Implementation
 The skill uses the Vercel AI SDK with xAI provider to perform web searches:
 
-1. **Web Search Flow** (`scripts/index.js`):
-   - Uses `xai.responses()` API (required for web_search tool)
-   - Calls `generateText()` with the `web_search` tool enabled
+1. **Search Flow** (`scripts/index.js`):
+   - Uses `xai.responses()` API (required for `web_search` and `x_search` tools)
+   - Calls `generateText()` with `web_search`, `x_search`, or both based on `--tool=web|x|both`
    - Returns structured results with `{text, sources}` where sources contain URLs and titles
    - Sources are of type `sourceType: 'url'` with `url` and optional `title` fields
 
@@ -47,10 +47,10 @@ The skill uses the Vercel AI SDK with xAI provider to perform web searches:
    - The skill has a priority-based activation system
    - Triggered by keywords: "搜索", "查询", "最新", "实时", "search", "latest", "today"
    - Claude Code automatically prioritizes this skill when these keywords are detected
-   - Can be invoked directly with `/grok-web-search "query"`
+   - Can be invoked directly with `/grok-search "query"`
 
 3. **Installation** (`scripts/install-to-claude.js`):
-   - Copies skill to `~/.claude/skills/grok-web-search`
+   - Copies skill to `~/.claude/skills/grok-search`
    - Excludes: node_modules (reinstalls fresh), test scripts, git files
    - Runs `npm install --production` in target directory
    - Cross-platform compatible (Windows, macOS, Linux)
@@ -108,9 +108,10 @@ When updating skill behavior, always update the frontmatter description first, a
 ## Important Implementation Details
 
 ### xAI API Usage
-- MUST use `xai.responses(modelName)` instead of regular model endpoint to enable web_search tool
-- The `web_search` tool defaults to `enableImageUnderstanding: true` and can be overridden via CLI flag `--enable_image_understanding=true|false`
-- Model automatically decides when to use web search based on the query
+- MUST use `xai.responses(modelName)` instead of regular model endpoint to enable search tools
+- `web_search` supports `allowedDomains`, `excludedDomains`, and `enableImageUnderstanding`
+- `x_search` supports `allowedXHandles`, `excludedXHandles`, `fromDate`, `toDate`, `enableImageUnderstanding`, and `enableVideoUnderstanding`
+- `--tool=both` registers both tools and lets the model decide which to invoke
 
 ### Source Extraction
 - Sources are returned in the `sources` array from `generateText()`
@@ -124,7 +125,7 @@ When updating skill behavior, always update the frontmatter description first, a
 - Process exits with code 1 on error
 
 ### Testing
-- Test suite runs 4 tests covering English/Chinese queries
+- Test suite runs 6 tests covering web search, X search, and combined mode
 - Includes 2-second delays between tests to avoid rate limiting
 - Single query mode available via `npm test "query"`
 - Expected performance: ~15-25s average response time, ~16 sources per query

@@ -1,10 +1,11 @@
-# Grok WebSearch Skill
+# Grok Search Skill
 
-A Claude Skill that enables real-time web searches using xAI's Grok model with automatic citation and source extraction.
+A Claude Skill that enables real-time Web Search and X Search using xAI's Grok model with automatic citation and source extraction.
 
 ## Features
 
 - 🔍 Real-time web search with xAI's Grok model
+- X Real-time X search for posts, handles, and threads
 - 📚 Automatic source URL extraction and citations
 - 🎯 **Auto-triggered by keywords**: "搜索", "查询", "最新", "实时", "search", "latest", etc.
 - ⚡ Priority usage when users request current/recent information
@@ -47,17 +48,29 @@ set XAI_API_KEY=your-api-key-here
 npm start "What are the latest AI developments?"
 
 # Restrict search domains
-npm start "Latest AI chip news" -- --allowed_domains=techcrunch.com,theverge.com
+npm start "Latest AI chip news" -- --tool=web --allowed_domains=techcrunch.com,theverge.com
 
 # Exclude specific domains
-npm start "Latest AI chip news" -- --excluded_domains=reddit.com,quora.com
+npm start "Latest AI chip news" -- --tool=web --excluded_domains=reddit.com,quora.com
+
+# X search with handle filters
+npm start "What are people saying about xAI on X?" -- --tool=x --allowed_x_handles=xai,elonmusk
+
+# X search with date range
+npm start "What is the current status of xAI?" -- --tool=x --from_date=2026-03-01 --to_date=2026-03-15
+
+# Register both tools and let model decide
+npm start "Latest xAI announcements today" -- --tool=both
 
 # Disable image understanding
 npm start "Latest AI chip news" -- --enable_image_understanding=false
 
+# Enable video understanding (X search only)
+npm start "Find X posts with videos about AI" -- --tool=x --enable_video_understanding=true
+
 # Test
 npm test "Your query"          # Single query test
-npm test                        # Run full test suite (4 tests)
+npm test                        # Run full test suite (6 tests)
 ```
 
 ## Install to Claude Code
@@ -68,7 +81,7 @@ npm run install:claude
 
 This will:
 - Install dependencies
-- Copy files to `~/.claude/skills/grok-web-search`
+- Copy files to `~/.claude/skills/grok-search`
 - Set up everything automatically
 - Works on Windows, macOS, and Linux
 
@@ -100,10 +113,10 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 
 **Direct invocation:**
 ```
-/grok-web-search "your search query"
+/grok-search "your search query"
 ```
 
-**Note:** This skill is designed to completely replace ALL built-in web search tools across all AI agent platforms. If you prefer using a built-in WebSearch for any reason, you can temporarily disable this skill or explicitly specify in your query "don't use grok-web-search".
+**Note:** This skill is designed to completely replace ALL built-in web search tools across all AI agent platforms. If you prefer using a built-in WebSearch for any reason, you can temporarily disable this skill or explicitly specify in your query "don't use grok-search".
 
 ## Configuration
 
@@ -114,15 +127,30 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 | `XAI_API_KEY` | ✅ Yes | - | Your xAI API key |
 | `XAI_MODEL` | ❌ No | `grok-4-1-fast` | Model to use |
 
-### Domain Filter Parameters
+### CLI Parameters
 
 `scripts/index.js` supports these CLI flags:
 
+- `--tool=web|x|both` (default: `web`)
+
+Web Search parameters:
 - `--allowed_domains=domain1,domain2`
 - `--excluded_domains=domain1,domain2`
-- `--enable_image_understanding=true|false` (default: `true`)
 
-`--allowed_domains` and `--excluded_domains` are optional and can be omitted.
+X Search parameters:
+- `--allowed_x_handles=handle1,handle2`
+- `--excluded_x_handles=handle1,handle2`
+- `--from_date=YYYY-MM-DD`
+- `--to_date=YYYY-MM-DD`
+
+Shared parameters:
+- `--enable_image_understanding=true|false` (default: `true`)
+- `--enable_video_understanding=true|false` (default: `false`, X search only)
+
+Rules:
+- `--allowed_domains` and `--excluded_domains` cannot be used together
+- `--allowed_x_handles` and `--excluded_x_handles` cannot be used together
+- Web domain lists support up to 5 domains; X handle lists support up to 10 handles
 
 ## Output Example
 
@@ -146,10 +174,12 @@ npm test "What's the latest tech news?"
 npm test
 ```
 
-Runs 4 tests covering:
+Runs 6 tests covering:
 - English/Chinese queries
 - Tech topics
 - Company-specific searches
+- X Search mode
+- Combined web + X mode
 
 Expected results:
 - ✅ 100% pass rate
@@ -164,7 +194,7 @@ Expected results:
 | `Module not found` | Run `npm install`                                                     |
 | Skill not found in Claude Code | Check `~/.claude/skills/` and restart Claude Code                     |
 | No sources returned | Normal - model didn't need web search for that query                  |
-| Dependencies error | `cd ~/.claude/skills/grok-web-search && npm install`                  |
+| Dependencies error | `cd ~/.claude/skills/grok-search && npm install`                      |
 
 ## Requirements
 

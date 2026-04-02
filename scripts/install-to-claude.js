@@ -14,7 +14,7 @@ import os from 'os';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SKILL_NAME = 'grok-web-search';
+const SKILL_NAME = 'grok-search';
 const PROJECT_DIR = path.resolve(__dirname, '..');
 const SKILLS_DIR = path.join(os.homedir(), '.claude', 'skills');
 const SKILL_INSTALL_DIR = path.join(SKILLS_DIR, SKILL_NAME);
@@ -38,7 +38,7 @@ const EXCLUDE_PATTERNS = [
   'scripts/install-to-claude.js',
 ];
 
-console.log('🚀 Installing Grok WebSearch Skill to Claude Code\n');
+console.log('🚀 Installing Grok Search Skill to Claude Code\n');
 
 // Check if npm is available
 try {
@@ -157,7 +157,7 @@ async function install() {
     console.log('3. Restart Claude Code to load the Skill\n');
     console.log('4. Use in conversations:');
     console.log('   \'Search for the latest AI news\'');
-    console.log('   \'/grok-web-search "your query"\'\n');
+    console.log('   \'/grok-search "your query"\'\n');
     console.log('📖 For more information, see https://github.com/Lanfei/grok-web-search-skill');
 
   } catch (error) {
