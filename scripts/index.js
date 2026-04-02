@@ -114,24 +114,7 @@ async function performWebSearch(query, options = {}) {
     });
 
     // Display results
-    console.log('📝 Answer:\n');
     console.log(text);
-    console.log('\n');
-
-    // Display sources
-    if (sources && sources.length > 0) {
-      console.log('📚 Sources:\n');
-      sources.forEach((source, index) => {
-        if (source.sourceType === 'url') {
-          console.log(`${index + 1}. ${source.url}`);
-          if (source.title) {
-            console.log(`   Title: ${source.title}`);
-          }
-        }
-      });
-    } else {
-      console.log('ℹ️  No web sources were used for this query.');
-    }
 
     // Return structured result
     return {

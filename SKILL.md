@@ -30,9 +30,7 @@ cd {baseDir} && [ -f .env ] && npm run search "<user's search query>" -- --allow
 
 - `allowed_domains` / `excluded_domains` are optional; include only when the user requests domain filtering.
 
-- Exits 0 → parse output and return results to the user:
-  - 📝 Answer: The comprehensive answer from Grok
-  - 📚 Sources: List of URLs with titles
+- Exits 0 → parse output and return results to the user.
 - Exits non-zero → `.env` not found, run **Interactive Setup** below, then retry the search.
 
 **Note**: The search may take 15-30 seconds to complete.

@@ -130,14 +130,6 @@ CLI flags take priority over environment variables.
 📝 Answer:
 
 [Comprehensive answer synthesized from multiple web sources...]
-
-📚 Sources:
-
-1. https://techcrunch.com/2026/01/26/...
-   Title: Latest AI Developments 2026
-2. https://www.theverge.com/...
-   Title: AI Industry Updates
-... and 8 more
 ```
 
 ## Testing
