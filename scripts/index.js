@@ -26,10 +26,27 @@ function parseDomainList(value) {
     .filter(Boolean);
 }
 
+function parseBooleanValue(value, flagName) {
+  if (typeof value !== 'string') {
+    throw new Error(`Invalid value for ${flagName}`);
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (normalized === 'true') {
+    return true;
+  }
+  if (normalized === 'false') {
+    return false;
+  }
+
+  throw new Error(`Invalid value for ${flagName}: "${value}". Use true or false.`);
+}
+
 function parseCliArgs(argv) {
   const args = [...argv];
   let allowedDomainsRaw = '';
   let excludedDomainsRaw = '';
+  let enableImageUnderstanding = true;
   const queryParts = [];
 
   for (let i = 0; i < args.length; i++) {
@@ -57,6 +74,25 @@ function parseCliArgs(argv) {
       continue;
     }
 
+    if (arg.startsWith('--enable_image_understanding=')) {
+      enableImageUnderstanding = parseBooleanValue(
+        arg.slice('--enable_image_understanding='.length),
+        '--enable_image_understanding',
+      );
+      continue;
+    }
+
+    if (arg === '--enable_image_understanding') {
+      const nextArg = args[i + 1];
+      if (nextArg && !nextArg.startsWith('--')) {
+        enableImageUnderstanding = parseBooleanValue(nextArg, '--enable_image_understanding');
+        i++;
+      } else {
+        enableImageUnderstanding = true;
+      }
+      continue;
+    }
+
     queryParts.push(arg);
   }
 
@@ -64,6 +100,7 @@ function parseCliArgs(argv) {
     query: queryParts.join(' ').trim(),
     allowedDomains: parseDomainList(allowedDomainsRaw),
     excludedDomains: parseDomainList(excludedDomainsRaw),
+    enableImageUnderstanding,
   };
 }
 
@@ -77,7 +114,7 @@ async function performWebSearch(query, options = {}) {
   // Get model from environment variable, default to grok-4-1-fast
   const modelName = process.env.XAI_MODEL || 'grok-4-1-fast-reasoning';
 
-  const { allowedDomains = [], excludedDomains = [] } = options;
+  const { allowedDomains = [], excludedDomains = [], enableImageUnderstanding = true } = options;
 
   console.log(`🔍 Searching with ${modelName}: ${query}\n`);
   if (allowedDomains.length > 0) {
@@ -93,23 +130,15 @@ async function performWebSearch(query, options = {}) {
   try {
     // Perform web search using xAI Grok with web_search tool
     // Note: web_search tool requires using xai.responses() API
-    const webSearchOptions = {
-      enableImageUnderstanding: true,
-    };
-
-    if (allowedDomains.length > 0) {
-      webSearchOptions.allowedDomains = allowedDomains;
-    }
-
-    if (excludedDomains.length > 0) {
-      webSearchOptions.excludedDomains = excludedDomains;
-    }
-
     const { text, sources } = await generateText({
       model: xai.responses(modelName),
       prompt: query,
       tools: {
-        web_search: xai.tools.webSearch(webSearchOptions),
+        web_search: xai.tools.webSearch({
+          allowedDomains,
+          excludedDomains,
+          enableImageUnderstanding,
+        }),
       },
     });
 
@@ -129,16 +158,30 @@ async function performWebSearch(query, options = {}) {
 
 // Main execution
 (async () => {
-  const { query, allowedDomains, excludedDomains } = parseCliArgs(process.argv.slice(2));
+  let parsedArgs;
+
+  try {
+    parsedArgs = parseCliArgs(process.argv.slice(2));
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    process.exit(1);
+  }
+
+  const { query, allowedDomains, excludedDomains, enableImageUnderstanding } = parsedArgs;
+
+  if (allowedDomains.length > 0 && excludedDomains.length > 0) {
+    console.error('❌ --allowed_domains and --excluded_domains cannot be used together.');
+    process.exit(1);
+  }
 
   if (!query) {
-    console.error('Usage: node scripts/index.js "<your query>" [--allowed_domains=domain1,domain2] [--excluded_domains=domain3,domain4]');
+    console.error('Usage: node scripts/index.js "<your query>" [--allowed_domains=domain1,domain2] [--excluded_domains=domain3,domain4] [--enable_image_understanding=true|false]');
     console.error('Example: node scripts/index.js "What are the latest AI developments?" --allowed_domains=techcrunch.com,theverge.com');
     process.exit(1);
   }
 
   try {
-    await performWebSearch(query, { allowedDomains, excludedDomains });
+    await performWebSearch(query, { allowedDomains, excludedDomains, enableImageUnderstanding });
   } catch (error) {
     process.exit(1);
   }

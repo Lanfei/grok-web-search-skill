@@ -52,6 +52,9 @@ npm start "Latest AI chip news" -- --allowed_domains=techcrunch.com,theverge.com
 # Exclude specific domains
 npm start "Latest AI chip news" -- --excluded_domains=reddit.com,quora.com
 
+# Disable image understanding
+npm start "Latest AI chip news" -- --enable_image_understanding=false
+
 # Test
 npm test "Your query"          # Single query test
 npm test                        # Run full test suite (4 tests)
@@ -113,12 +116,13 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 
 ### Domain Filter Parameters
 
-`scripts/index.js` now supports both CLI flags and env vars:
+`scripts/index.js` supports these CLI flags:
 
 - `--allowed_domains=domain1,domain2`
 - `--excluded_domains=domain1,domain2`
+- `--enable_image_understanding=true|false` (default: `true`)
 
-CLI flags take priority over environment variables.
+`--allowed_domains` and `--excluded_domains` are optional and can be omitted.
 
 ## Output Example
 

@@ -109,7 +109,7 @@ When updating skill behavior, always update the frontmatter description first, a
 
 ### xAI API Usage
 - MUST use `xai.responses(modelName)` instead of regular model endpoint to enable web_search tool
-- The `web_search` tool is configured with `enableImageUnderstanding: true`
+- The `web_search` tool defaults to `enableImageUnderstanding: true` and can be overridden via CLI flag `--enable_image_understanding=true|false`
 - Model automatically decides when to use web search based on the query
 
 ### Source Extraction

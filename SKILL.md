@@ -29,6 +29,7 @@ cd {baseDir} && [ -f .env ] && npm run search "<user's search query>" -- --allow
 ```
 
 - `allowed_domains` / `excluded_domains` are optional; include only when the user requests domain filtering.
+- `enable_image_understanding` is optional; pass `--enable_image_understanding=false` when the user asks to disable image analysis.
 
 - Exits 0 → parse output and return results to the user.
 - Exits non-zero → `.env` not found, run **Interactive Setup** below, then retry the search.
