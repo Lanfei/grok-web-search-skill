@@ -46,6 +46,12 @@ set XAI_API_KEY=your-api-key-here
 # Standalone usage
 npm start "What are the latest AI developments?"
 
+# Restrict search domains
+npm start "Latest AI chip news" -- --allowed_domains=techcrunch.com,theverge.com
+
+# Exclude specific domains
+npm start "Latest AI chip news" -- --excluded_domains=reddit.com,quora.com
+
 # Test
 npm test "Your query"          # Single query test
 npm test                        # Run full test suite (4 tests)
@@ -104,6 +110,17 @@ Once installed, this Skill **REPLACES ALL built-in web search tools** across all
 |----------|----------|---------|-------------|
 | `XAI_API_KEY` | ✅ Yes | - | Your xAI API key |
 | `XAI_MODEL` | ❌ No | `grok-4-1-fast` | Model to use |
+| `XAI_ALLOWED_DOMAINS` | ❌ No | - | Comma-separated allowlist domains |
+| `XAI_EXCLUDED_DOMAINS` | ❌ No | - | Comma-separated blocklist domains |
+
+### Domain Filter Parameters
+
+`scripts/index.js` now supports both CLI flags and env vars:
+
+- `--allowed_domains=domain1,domain2`
+- `--excluded_domains=domain1,domain2`
+
+CLI flags take priority over environment variables.
 
 ## Output Example
 

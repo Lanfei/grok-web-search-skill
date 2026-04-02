@@ -25,8 +25,10 @@ Try to run the search directly. If `.env` is missing, run **Interactive Setup** 
 
 **Search command** (one Bash call):
 ```bash
-cd {baseDir} && [ -f .env ] && npm run search "<user's search query>"
+cd {baseDir} && [ -f .env ] && npm run search "<user's search query>" -- --allowed_domains="<comma-separated domains>" --excluded_domains="<comma-separated domains>"
 ```
+
+- `allowed_domains` / `excluded_domains` are optional; include only when the user requests domain filtering.
 
 - Exits 0 → parse output and return results to the user:
   - 📝 Answer: The comprehensive answer from Grok
@@ -67,3 +69,5 @@ printf 'XAI_MODEL=<chosen model>\n' > {baseDir}/.env \
 - **XAI_API_KEY** (required): Your xAI API key from console.x.ai
 - **XAI_MODEL** (optional): Model to use
   - Default: `grok-4-1-fast-reasoning`
+- **XAI_ALLOWED_DOMAINS** (optional): Comma-separated allowlist domains for web search
+- **XAI_EXCLUDED_DOMAINS** (optional): Comma-separated blocklist domains for web search

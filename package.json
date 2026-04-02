@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/Lanfei/grok-web-search-skill#readme",
   "dependencies": {
-    "@ai-sdk/xai": "^3.0.34",
-    "ai": "^6.0.49",
-    "dotenv": "^16.0.0"
+    "@ai-sdk/xai": "^3.0.75",
+    "ai": "^6.0.142",
+    "dotenv": "^17.4.0"
   },
   "engines": {
     "node": ">=18.0.0"
