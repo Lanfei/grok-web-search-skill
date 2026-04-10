@@ -29,8 +29,12 @@ cd {baseDir} && [ -f .env ] && npm run search "<query to search>" -- --tool="web
 ```
 
 - `--tool` defaults to `web`; use `x` for X Search and `both` to register both tools.
-- `allowed_domains` / `excluded_domains` are for Web Search only.
+- `allowed_domains` / `excluded_domains` are for Web Search only (max 5 each).
+- `allowed_domains` and `excluded_domains` cannot be set together in the same request.
 - `allowed_x_handles` / `excluded_x_handles` / `from_date` / `to_date` are for X Search only.
+- `allowed_x_handles` / `excluded_x_handles` support up to 10 handles each.
+- `allowed_x_handles` and `excluded_x_handles` cannot be set together in the same request.
+- `from_date` / `to_date` must be ISO8601 format (for example: `YYYY-MM-DD`).
 - `enable_image_understanding` applies to both search tools.
 - `enable_video_understanding` applies only to X Search.
 
